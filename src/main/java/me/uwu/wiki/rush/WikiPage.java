@@ -19,7 +19,7 @@ public @Data class WikiPage {
     private int length;
 
     public static WikiPage decode(String s) {
-        String[] split = s.split(" ");
+        String[] split = s.split("\t");
         return new WikiPage(split[0], split[1], split[2]);
     }
 
@@ -29,7 +29,7 @@ public @Data class WikiPage {
     }
 
     public String encode() {
-        return url + " " + title + " " + description;
+        return url + "\t" + title + "\t" + description;
     }
 
     public static WikiPage fromDriver(WebDriver driver) {

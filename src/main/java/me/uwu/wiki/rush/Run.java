@@ -19,11 +19,11 @@ public @Data class Run {
     }
 
     public String encodeBase64() {
-        return Base64.getEncoder().encodeToString((start.encode() + "\t" + end.encode()).getBytes());
+        return Base64.getEncoder().encodeToString((start.encode() + "\t\t" + end.encode()).getBytes());
     }
 
     public static Run decodeBase64(String base64) {
-        String[] split = new String(Base64.getDecoder().decode(base64)).split("\t");
+        String[] split = new String(Base64.getDecoder().decode(base64)).split("\t\t");
         return new Run(WikiPage.decode(split[0]), WikiPage.decode(split[1]));
     }
 

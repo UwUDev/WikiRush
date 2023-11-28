@@ -1,5 +1,6 @@
 package me.uwu.wiki.rush;
 
+import org.openqa.selenium.UnhandledAlertException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Wait;
@@ -45,10 +46,17 @@ public class Tester {
         run.addStep(run.getStart(), start);
 
         while (true) {
-            driver.executeScript("document.onkeydown=function(e){if(!0===e.ctrlKey&&70===e.keyCode)return e.preventDefault(),alert(\"Arr\\xeate de tricher >:(\"),!1};");
-            Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
-            wait.until(d -> !d.getCurrentUrl().equals(run.getLatestPage().getUrl()));
-            System.out.println("Current page: " + driver.getCurrentUrl());
+            driver.executeScript("document.onkeydown=function(e){if(!0===e.ctrlKey&&70===e.keyCode)return e.preventDefault(),alert(\"ANTICHEAT\"),!1};");
+            try {
+                Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
+                wait.until(d -> !d.getCurrentUrl().equals(run.getLatestPage().getUrl()));
+                System.out.println("Current page: " + driver.getCurrentUrl());
+            } catch (UnhandledAlertException ignored) {
+                System.err.println("Cheat detected (CTRL+F), exiting...");
+                driver.quit();
+                System.exit(0);
+            }
+
             WikiPage page = WikiPage.fromDriver(driver);
             if (page == null) {
                 page = new WikiPage(driver.getCurrentUrl(), driver.getTitle(), "Unknown");
