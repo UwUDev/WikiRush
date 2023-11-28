@@ -45,6 +45,7 @@ public class Tester {
         run.addStep(run.getStart(), start);
 
         while (true) {
+            driver.executeScript("document.onkeydown=function(e){if(!0===e.ctrlKey&&70===e.keyCode)return e.preventDefault(),alert(\"Arr\\xeate de tricher >:(\"),!1};");
             Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(5));
             wait.until(d -> !d.getCurrentUrl().equals(run.getLatestPage().getUrl()));
             System.out.println("Current page: " + driver.getCurrentUrl());
