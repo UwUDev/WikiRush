@@ -2,7 +2,6 @@ package me.uwu.wiki.rush;
 
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public record Rules(boolean allowSearch, boolean allowPortals, boolean allowBack) {
@@ -16,7 +15,7 @@ public record Rules(boolean allowSearch, boolean allowPortals, boolean allowBack
         StringBuilder builder = new StringBuilder();
 
         {
-            InputStream is = getClass().getResourceAsStream("/anticheat/security.js");
+            InputStream is = getClass().getResourceAsStream("/anticheat/base.js");
             byte[] buffer = new byte[is.available()];
             is.read(buffer);
             builder.append(new String(buffer));

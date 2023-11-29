@@ -28,15 +28,28 @@ for (let i = 0; i < inputs.length; i++) {
     }
 }
 
-const searchButtons = document.getElementsByClassName("searchButton");
+let searchButtons = document.getElementsByClassName("searchButton");
 for (let i = 0; i < searchButtons.length; i++) {
     const searchButton = searchButtons[i];
     searchButton.remove();
 }
 
 // need twice idk why
-const searchButtonss = document.getElementsByClassName("searchButton");
-for (let i = 0; i < searchButtonss.length; i++) {
-    const searchButton = searchButtonss[i];
+searchButtons = document.getElementsByClassName("searchButton");
+for (let i = 0; i < searchButtons.length; i++) {
+    const searchButton = searchButtons[i];
+    searchButton.remove();
+}
+
+searchButtons = document.getElementsByClassName("cdx-search-input__end-button");
+for (let i = 0; i < searchButtons.length; i++) {
+    const searchButton = searchButtons[i];
+    searchButton.remove();
+}
+
+//search-toggle
+searchButtons = document.getElementsByClassName("search-toggle");
+for (let i = 0; i < searchButtons.length; i++) {
+    const searchButton = searchButtons[i];
     searchButton.remove();
 }

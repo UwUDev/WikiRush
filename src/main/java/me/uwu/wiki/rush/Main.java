@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.Scanner;
 
-public class Tester {
+public class Main {
 
     public static void main(String[] args) throws IOException {
         Run run;
@@ -29,7 +29,7 @@ public class Tester {
             boolean allowSearch = scanner.next().equalsIgnoreCase("y");
             System.out.println("Allow portals ? [N/y]");
             boolean allowPortals = scanner.next().equalsIgnoreCase("y");
-            System.out.println("Allow block ? [N/y]");
+            System.out.println("Allow going back ? [N/y]");
             boolean allowBack = scanner.next().equalsIgnoreCase("y");
 
             run = generateRandomRun(new Rules(allowSearch, allowPortals, allowBack));
@@ -44,6 +44,8 @@ public class Tester {
         String antiCheatScript = run.getRules().buildRulesScript();
 
         System.out.println("Press enter to start");
+
+        //noinspection ResultOfMethodCallIgnored
         System.in.read();
 
 
@@ -58,7 +60,7 @@ public class Tester {
         run.addStep(run.getStart(), start);
 
         new Thread(() -> {
-            String reason = null;
+            String reason;
             while (true) {
                 try {
                     Alert alert = driver.switchTo().alert();
@@ -73,6 +75,7 @@ public class Tester {
                     break;
                 } catch (NoAlertPresentException | UnhandledAlertException ignored) {
                     try {
+                        //noinspection BusyWait
                         Thread.sleep(20);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -93,7 +96,7 @@ public class Tester {
 
                 try {
                     Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofMinutes(15));
-                    wait.until(d -> !d.getCurrentUrl().equals(run.getLatestPage().getUrl()));
+                    wait.until(d -> !d.getCurrentUrl().split("#")[0].split("\\?")[0].equals(run.getLatestPage().getUrl()));
                     System.out.println("Current page: " + driver.getCurrentUrl());
                 } catch (Exception ignored) { // caused by antiCheatScript
                     continue;
@@ -101,7 +104,7 @@ public class Tester {
 
                 WikiPage page = WikiPage.fromDriver(driver);
                 if (page == null) {
-                    page = new WikiPage(driver.getCurrentUrl(), driver.getTitle(), "Unknown");
+                    page = new WikiPage(driver.getCurrentUrl().split("#")[0].split("\\?")[0], driver.getTitle(), "Unknown");
                 }
                 run.addStep(page, start);
                 if (driver.getCurrentUrl().split("#")[0].split("\\?")[0].replace("\n", "")
