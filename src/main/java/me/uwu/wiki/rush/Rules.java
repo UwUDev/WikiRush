@@ -11,6 +11,7 @@ public record Rules(boolean allowSearch, boolean allowPortals, boolean allowBack
     }
 
     @SneakyThrows
+    @SuppressWarnings({"DataFlowIssue", "ResultOfMethodCallIgnored"})
     public String buildRulesScript() {
         StringBuilder builder = new StringBuilder();
 

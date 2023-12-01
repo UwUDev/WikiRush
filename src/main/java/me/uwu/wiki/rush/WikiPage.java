@@ -74,6 +74,7 @@ public @Data class WikiPage {
         return null;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static WikiPage random() {
         try {
             OkHttpClient client = new OkHttpClient();
@@ -82,11 +83,12 @@ public @Data class WikiPage {
                     .url("https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Page_au_hasard")
                     .build();
 
-            String pageContent = null;
-            String url = null;
+            String pageContent;
+            String url;
             Response response = client.newCall(request).execute();
             pageContent = response.body().string();
             url = response.request().url().toString();
+            response.close();
 
 
             return WikiPage.fromRawPage(pageContent, url).setLength(pageContent.length());

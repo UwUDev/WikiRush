@@ -2,7 +2,6 @@ package me.uwu.wiki.rush;
 
 import me.uwu.wiki.rush.browser.Browser;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -172,14 +171,14 @@ public class Main {
                 continue;
             }
 
-            int nubersInTitle = 0;
+            int numbersInTitle = 0;
             for (char c : page.getTitle().toCharArray()) {
                 if (Character.isDigit(c)) {
-                    nubersInTitle++;
+                    numbersInTitle++;
                 }
             }
 
-            if (nubersInTitle > 2) {
+            if (numbersInTitle > 2) {
                 System.err.println("Page title has too many numbers, retrying...");
                 continue;
             }
