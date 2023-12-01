@@ -1,21 +1,45 @@
 package me.uwu.wiki.rush;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriver;
+import me.uwu.wiki.rush.browser.Browser;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.time.Duration;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Browser browser = Browser.getPrefBrowser();
+        if (browser == null) {
+            System.err.println("No favorite browser detected.");
+            List<Browser> browsers = Browser.detectBrowsers();
+            if (browsers.isEmpty()) {
+                System.err.println("No valid browser detected.");
+                System.exit(1);
+            }
+
+            System.out.println("Choose a browser :");
+            for (int i = 0; i < browsers.size(); i++) {
+                System.out.println((i + 1) + ". " + browsers.get(i).name());
+            }
+
+            System.out.print("Choice: ");
+            Scanner scanner = new Scanner(System.in);
+            int choice = scanner.nextInt();
+            browser = browsers.get(choice - 1);
+            System.out.println("Browser " + browser.name() + " has been selected.");
+            Browser.savePrefBrowser(browser);
+        }
+
+        System.out.println("Using browser " + browser.name() + ".");
+
         Run run;
         System.out.println("1. Generate a new run");
         System.out.println("2. Load a run from seed");
@@ -53,7 +77,7 @@ public class Main {
 
         System.out.println("Aide :\n" + run.getEnd().getDescription());
 
-        ChromeDriver driver = new ChromeDriver();
+        WebDriver driver = browser.getDriver().getConstructor().newInstance();
         driver.get(run.getStart().getUrl());
 
         long start = System.currentTimeMillis();
@@ -69,7 +93,8 @@ public class Main {
                         driver.switchTo().alert().accept();
                         driver.navigate().refresh();
                         // reinject script
-                        driver.executeScript(antiCheatScript);
+                        JavascriptExecutor js = (JavascriptExecutor) driver;
+                        js.executeScript(antiCheatScript);
                         continue;
                     }
                     break;
@@ -91,7 +116,8 @@ public class Main {
         while (true) {
             try {
                 if (!antiCheatScript.isEmpty()) {
-                    driver.executeScript(antiCheatScript);
+                    JavascriptExecutor js = (JavascriptExecutor) driver;
+                    js.executeScript(antiCheatScript);
                 }
 
                 try {
